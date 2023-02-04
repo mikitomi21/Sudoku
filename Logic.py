@@ -35,13 +35,12 @@ def isValidSudoku(board):
     return True
 
 
-def emptySquare(board):
-    empty = 0
+def emptySquareOnBoard(board):
     for row in board:
         for digit in row:
             if digit == 0:
-                empty+=1
-    return empty
+                return True
+    return False
 
 
 def notUsedDigits(square):
@@ -54,16 +53,34 @@ def notUsedDigits(square):
 
 
 def solveSudoku(board):
+    #end recursive funtion if board is full
+    if not emptySquareOnBoard(board):
+        return board
+
     for row in range(SIZE_OF_BOARD):
         notUsed = notUsedDigits(board[row])
-        if not notUsed:
-            continue
+
         for digit in range(SIZE_OF_BOARD):
             if board[row][digit] != 0:
                 continue
+
             for notUsedDigit in notUsed:
-                board[row][digit] = notUsedDigit
-                if isValidSudoku(board):
-                    notUsed.pop(notUsed.index(notUsedDigit))
-                    break
+                board_temp = board
+                board_temp[row][digit] = notUsedDigit
+
+                # check wheather some of the not used digit match to square
+                if isValidSudoku(board_temp):
+                    if solveSudoku(board_temp):
+                        return board_temp
+                    continue
+
+            #any of the not used digit match to square
+            board_temp[row][digit] = 0
+            return False
+
     return board
+
+
+
+
+
