@@ -17,10 +17,10 @@ def isValidSudoku(board):
             return False
 
     #check columns
-    for row in board:
+    for col in range(SIZE_OF_BOARD):
         listColumn=[]
         for i in range(SIZE_OF_BOARD):
-            listColumn.append(row[i])
+            listColumn.append(board[i][col])
         if not checkList(listColumn):
             return False
 
@@ -34,3 +34,36 @@ def isValidSudoku(board):
 
     return True
 
+
+def emptySquare(board):
+    empty = 0
+    for row in board:
+        for digit in row:
+            if digit == 0:
+                empty+=1
+    return empty
+
+
+def notUsedDigits(square):
+    notUsed=[1,2,3,4,5,6,7,8,9]
+    for digit in square:
+        if digit == 0:
+            continue
+        notUsed.pop(notUsed.index(digit))
+    return notUsed
+
+
+def solveSudoku(board):
+    for row in range(SIZE_OF_BOARD):
+        notUsed = notUsedDigits(board[row])
+        if not notUsed:
+            continue
+        for digit in range(SIZE_OF_BOARD):
+            if board[row][digit] != 0:
+                continue
+            for notUsedDigit in notUsed:
+                board[row][digit] = notUsedDigit
+                if isValidSudoku(board):
+                    notUsed.pop(notUsed.index(notUsedDigit))
+                    break
+    return board
