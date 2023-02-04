@@ -54,16 +54,27 @@ def notUsedDigits(square):
 
 
 def solveSudoku(board):
+    if not emptySquare(board):
+        return board
     for row in range(SIZE_OF_BOARD):
         notUsed = notUsedDigits(board[row])
-        if not notUsed:
-            continue
         for digit in range(SIZE_OF_BOARD):
             if board[row][digit] != 0:
                 continue
+
             for notUsedDigit in notUsed:
-                board[row][digit] = notUsedDigit
-                if isValidSudoku(board):
-                    notUsed.pop(notUsed.index(notUsedDigit))
-                    break
+                board_temp = board
+                board_temp[row][digit] = notUsedDigit
+
+                if isValidSudoku(board_temp):
+                    if solveSudoku(board_temp):
+                        return board_temp
+                    continue
+            board_temp[row][digit] = 0
+            return False
     return board
+
+
+
+
+
